@@ -7,25 +7,25 @@ function LoginPage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // try {
-    //   const response = await fetch('/api/login', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({ username, password }),
-    //   });
-    //   const data = await response.json();
-    //   if (data.token) {
-    //     localStorage.setItem('jwtToken', data.token);
-    //     Redirect to FileManager or update the UI state
-    //   } else {
-    //     Handle login error (e.g., show an error message)
-    //   }
-    // } catch (error) {
-    //   console.error('Login error:', error);
-    //   Handle error
-    // }
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await response.json();
+      if (data.token) {
+        localStorage.setItem('jwtToken', data.token);
+        // Redirect to FileManager or update the UI state
+      } else {
+        // Handle login error (e.g., show an error message)
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      // Handle error
+    }
 
     console.log(username,password)
   };
