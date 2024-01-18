@@ -5,6 +5,14 @@ const path = require('path');
 const ffmpeg = require('fluent-ffmpeg');
 const ffprobePath = require('ffprobe-static').path;
 
+const mongoose = require('mongoose');
+
+// Replace 'mongodb://localhost:27017/myapp' with your MongoDB URI
+mongoose.connect('mongodb://localhost:27017/myapp', { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.log(err));
+
+
 const app = express();
 
 app.use(cors({ origin: 'http://localhost:3000' }));
