@@ -1,36 +1,39 @@
-const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
-const userSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    role: {
-        type: String,
-        required: true,
-        enum: ['user', 'admin'],
-        default: 'user'
+class User {
+    constructor(username, password, role = 'user') {
+        this.username = username;
+        this.password = password;
+        this.role = role;
     }
-});
 
-// Hash password before saving
-userSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) return next();
-
-    try {
+    async setPassword(password) {
         const salt = await bcrypt.genSalt(10);
-        this.password = await bcrypt.hash(this.password, salt);
-        next();
-    } catch (err) {
-        next(err);
+        this.password = await bcrypt.hash(password, salt);
     }
-});
 
-module.exports = mongoose.model('User', userSchema);
+    async validatePassword(password) {
+        return await bcrypt.compare(password, this.password);
+    }
+
+    static async save(username, passwordHash, role = 'user') {
+        const userData = { username, password: passwordHash, role };
+        fs.writeFileSync(
+            path.join(__dirname, 'private/', username + '.json'), 
+            JSON.stringify(userData)
+        );
+    }
+
+    static load(username) {
+        const filePath = path.join(__dirname, 'private/', username + '.json');
+        if (fs.existsSync(filePath)) {
+            const data = fs.readFileSync(filePath);
+            return JSON.parse(data);
+        }
+        return null;
+    }
+
+
+}
+
+module.exports = User;
