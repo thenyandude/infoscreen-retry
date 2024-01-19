@@ -1,4 +1,6 @@
 const bcrypt = require('bcryptjs');
+const fs = require('fs');
+const path = require('path');
 
 class User {
     constructor(username, password, role = 'user') {
@@ -18,8 +20,15 @@ class User {
 
     static async save(username, passwordHash, role = 'user') {
         const userData = { username, password: passwordHash, role };
+
+        // New code to ensure the directory exists
+        const dirPath = path.join(__dirname, '../private/');
+        if (!fs.existsSync(dirPath)){
+            fs.mkdirSync(dirPath, { recursive: true });
+        }
+
         fs.writeFileSync(
-            path.join(__dirname, 'private/', username + '.json'), 
+            path.join(dirPath, username + '.json'), 
             JSON.stringify(userData)
         );
     }

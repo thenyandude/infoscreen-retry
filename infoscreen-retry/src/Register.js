@@ -1,39 +1,39 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './Login.css';
 
-function LoginPage() {
+import './Register.css';
+
+
+function RegisterPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch('http://localhost:3001/api/login', {
+      const response = await fetch('http://localhost:3001/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ username, password }),
       });
-      const data = await response.json();
-      if (response.ok) {
-        localStorage.setItem('jwtToken', data.token);
-        navigate('/m')  
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        setErrorMessage(errorText);
       } else {
-        // Handle login error
-        setErrorMessage(data.message || 'Error logging in');
+        // Registration successful
+        // Redirect to login or show a success message
       }
     } catch (error) {
-      console.error('Login error:', error);
-      setErrorMessage('Login failed. Please try again.');
+      console.error('Registration error:', error);
+      setErrorMessage('Registration failed. Please try again.');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="login-form">
+    <form onSubmit={handleSubmit} className="register-form">
       <div className="form-group">
         <label htmlFor="username">Username:</label>
         <input
@@ -55,9 +55,9 @@ function LoginPage() {
         />
       </div>
       {errorMessage && <div className="error-message">{errorMessage}</div>}
-      <button type="submit">Login</button>
+      <button type="submit">Register</button>
     </form>
   );
 }
 
-export default LoginPage;
+export default RegisterPage;
