@@ -4,6 +4,7 @@ const cors = require('cors');
 const path = require('path');
 const ffmpeg = require('fluent-ffmpeg');
 const ffprobePath = require('ffprobe-static').path;
+const crypto = require('crypto');
 
 const User = require('./models/User')
 
@@ -142,40 +143,54 @@ app.delete('/removeMedia/:mediaId', (req, res) => {
 app.use('/media', express.static(path.join(__dirname, 'public', 'media')));
 
 
+
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
 
   try {
-      const userData = User.load(username);
-      if (!userData) {
-          return res.status(401).send('User not found');
-      }
+    const userData = User.load(username);
+    if (!userData) {
+      return res.status(401).send('User not found');
+    }
 
-      const user = new User(userData.username, userData.password);
-      if (await user.validatePassword(password)) {
-          // User authenticated
-          // Set user session or generate token here
-          res.json({ message: 'Login successful' });
-      } else {
-          res.status(401).send('Invalid credentials');
-      }
+    const user = new User(userData.username, userData.password);
+    if (await user.validatePassword(password)) {
+      // User authenticated, generate a token
+      const token = crypto.randomBytes(16).toString('hex');
+      res.json({ token: token, message: 'Login successful' });
+    } else {
+      res.status(401).send('Invalid credentials');
+    }
   } catch (error) {
-      console.error('Login error:', error);
-      res.status(500).send('Internal server error');
+    console.error('Login error:', error);
+    res.status(500).send('Internal server error');
   }
 });
+
 
 
 
 app.post('/api/register', async (req, res) => {
   const { username, password } = req.body;
 
-  const user = new User(username, '');
-  await user.setPassword(password);
-  User.save(username, user.password);
+  // Check if user already exists
+  if (User.load(username)) {
+    return res.status(409).send('User already exists');
+  }
 
-  res.status(201).send('User registered');
+  try {
+    const newUser = new User(username, '');
+    await newUser.setPassword(password); // Hash password
+    User.save(username, newUser.password); // Save new user
+
+    res.status(201).send('User registered successfully');
+  } catch (error) {
+    console.error('Registration error:', error);
+    res.status(500).send('Internal server error');
+  }
 });
+
+
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

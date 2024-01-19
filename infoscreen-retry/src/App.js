@@ -4,6 +4,7 @@ import FileUpload from './FileUpload';
 import ImageViewer from './ImageViewer';
 import FileManager from './FileManager';
 import LoginPage from './Login';
+import RegisterPage from './Register';
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
         <Route path="/upload" element={<FileUpload/>} />
         <Route path="/m" element={<FileManager/>}   />
         <Route path="/" element={<LoginPage/>}   />
+        <Route path="/r" element={<RegisterPage/>}   />
 
         </Routes>
     </Router>
