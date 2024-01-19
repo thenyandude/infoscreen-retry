@@ -34,7 +34,7 @@ class User {
     }
 
     static load(username) {
-        const filePath = path.join(__dirname, 'private/', username + '.json');
+        const filePath = path.join(__dirname, '../private/', username + '.json');
         if (fs.existsSync(filePath)) {
             const data = fs.readFileSync(filePath);
             return JSON.parse(data);

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 import './Register.css';
 
 
@@ -7,6 +7,7 @@ function RegisterPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -23,8 +24,7 @@ function RegisterPage() {
         const errorText = await response.text();
         setErrorMessage(errorText);
       } else {
-        // Registration successful
-        // Redirect to login or show a success message
+        navigate('/')
       }
     } catch (error) {
       console.error('Registration error:', error);

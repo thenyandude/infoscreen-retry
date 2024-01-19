@@ -175,7 +175,7 @@ app.post('/api/register', async (req, res) => {
 
   // Check if user already exists
   if (User.load(username)) {
-    return res.status(400).send('User already exists');
+    return res.status(409).send('User already exists');
   }
 
   try {
@@ -189,6 +189,7 @@ app.post('/api/register', async (req, res) => {
     res.status(500).send('Internal server error');
   }
 });
+
 
 
 const PORT = process.env.PORT || 3001;
