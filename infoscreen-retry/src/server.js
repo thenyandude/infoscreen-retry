@@ -143,7 +143,6 @@ app.delete('/removeMedia/:mediaId', (req, res) => {
 app.use('/media', express.static(path.join(__dirname, 'public', 'media')));
 
 
-
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
 
