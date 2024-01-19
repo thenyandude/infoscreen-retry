@@ -5,6 +5,9 @@ const path = require('path');
 const ffmpeg = require('fluent-ffmpeg');
 const ffprobePath = require('ffprobe-static').path;
 
+const User = require('./models/User')
+
+
 const app = express();
 
 app.use(cors({ origin: 'http://localhost:3000' }));
@@ -137,6 +140,42 @@ app.delete('/removeMedia/:mediaId', (req, res) => {
 });
 
 app.use('/media', express.static(path.join(__dirname, 'public', 'media')));
+
+
+app.post('/api/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+      const userData = User.load(username);
+      if (!userData) {
+          return res.status(401).send('User not found');
+      }
+
+      const user = new User(userData.username, userData.password);
+      if (await user.validatePassword(password)) {
+          // User authenticated
+          // Set user session or generate token here
+          res.json({ message: 'Login successful' });
+      } else {
+          res.status(401).send('Invalid credentials');
+      }
+  } catch (error) {
+      console.error('Login error:', error);
+      res.status(500).send('Internal server error');
+  }
+});
+
+
+
+app.post('/api/register', async (req, res) => {
+  const { username, password } = req.body;
+
+  const user = new User(username, '');
+  await user.setPassword(password);
+  User.save(username, user.password);
+
+  res.status(201).send('User registered');
+});
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

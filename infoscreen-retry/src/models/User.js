@@ -1,22 +1,39 @@
-const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
-const userSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    role: {
-        type: String,
-        required: true,
-        enum: ['user', 'admin'], // Enum to restrict the role to either 'user' or 'admin'
-        default: 'user'
+class User {
+    constructor(username, password, role = 'user') {
+        this.username = username;
+        this.password = password;
+        this.role = role;
     }
-});
 
-module.exports = mongoose.model('User', userSchema);
+    async setPassword(password) {
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(password, salt);
+    }
+
+    async validatePassword(password) {
+        return await bcrypt.compare(password, this.password);
+    }
+
+    static async save(username, passwordHash, role = 'user') {
+        const userData = { username, password: passwordHash, role };
+        fs.writeFileSync(
+            path.join(__dirname, 'private/', username + '.json'), 
+            JSON.stringify(userData)
+        );
+    }
+
+    static load(username) {
+        const filePath = path.join(__dirname, 'private/', username + '.json');
+        if (fs.existsSync(filePath)) {
+            const data = fs.readFileSync(filePath);
+            return JSON.parse(data);
+        }
+        return null;
+    }
+
+
+}
+
+module.exports = User;
