@@ -153,11 +153,12 @@ app.post('/api/login', async (req, res) => {
       return res.status(401).send('User not found');
     }
 
-    const user = new User(userData.username, userData.password);
+    const user = new User(userData.username, userData.password, userData.role);
     if (await user.validatePassword(password)) {
       // User authenticated, generate a token
       const token = crypto.randomBytes(16).toString('hex');
-      res.json({ token: token, message: 'Login successful' });
+      // Include the user's role in the response
+      res.json({ token: token, role: user.role, message: 'Login successful' });
     } else {
       res.status(401).send('Invalid credentials');
     }
@@ -166,6 +167,7 @@ app.post('/api/login', async (req, res) => {
     res.status(500).send('Internal server error');
   }
 });
+
 
 
 
