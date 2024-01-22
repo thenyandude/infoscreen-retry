@@ -5,6 +5,7 @@ import ImageViewer from './ImageViewer';
 import FileManager from './FileManager';
 import LoginPage from './Login';
 import RegisterPage from './Register';
+import ProtectedRoute from './middleware/ProtectedRoute';
 
 const App = () => {
   return (
@@ -12,7 +13,12 @@ const App = () => {
       <Routes>
         <Route path="/v" element={<ImageViewer />} />
         <Route path="/upload" element={<FileUpload/>} />
-        <Route path="/m" element={<FileManager/>}   />
+
+        <Route path="/m" element={
+        <ProtectedRoute requiredRole="admin">
+          <FileManager/>
+        </ProtectedRoute>}/>
+
         <Route path="/" element={<LoginPage/>}   />
         <Route path="/r" element={<RegisterPage/>}   />
 

@@ -21,6 +21,7 @@ function LoginPage() {
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem('jwtToken', data.token);
+        localStorage.setItem('userRole', data.role)
         navigate('/m')  
       } else {
         // Handle login error
