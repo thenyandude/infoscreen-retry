@@ -5,8 +5,9 @@ const path = require('path');
 const ffmpeg = require('fluent-ffmpeg');
 const ffprobePath = require('ffprobe-static').path;
 const crypto = require('crypto');
+const fs = require('fs');
 
-const User = require('./models/User')
+const User = require('./models/User');
 
 
 const app = express();
@@ -36,27 +37,43 @@ app.post('/upload', (req, res) => {
       console.error(err);
       res.status(500).send('Internal Server Error');
     } else {
+      let txtFileContent = '';
+      const textFile = req.files.find(file => file.originalname.endsWith('.txt'));
+      
+      if (textFile) {
+        txtFileContent = fs.readFileSync(textFile.path, 'utf8');
+      }
+
       const mediaData = await Promise.all(
         req.files.map(async (file, index) => {
           const isVideo = file.mimetype.startsWith('video');
           let duration;
+          let textContent = '';
 
           if (isVideo) {
             // If it's a video, get the duration from the video metadata
             const videoDuration = await getVideoDuration(file.path);
-            duration = videoDuration ? videoDuration * 1000 : undefined; // Convert to milliseconds
+            duration = videoDuration ? videoDuration * 1000 : undefined;
           } else {
-            // If it's an image, use the duration provided from the client-side
+            // If it's an image or text file, use the duration provided from the client-side
             duration = req.body[`duration_${index}`] ? parseInt(req.body[`duration_${index}`], 10) : undefined;
+          }
+
+          if (file.originalname.endsWith('.txt')) {
+            // If it's the .txt file, use its content as the text
+            textContent = txtFileContent;
+          } else {
+            // For other files, use the text provided from the client-side
+            textContent = req.body[`text_${index}`] || '';
           }
 
           return {
             _id: index.toString(),
             path: file.originalname,
-            duration: duration, // Convert to milliseconds
+            duration: duration,
             order: index + 1,
-            text: req.body[`text_${index}`] || '',
-            type: isVideo ? 'video' : 'image',
+            text: textContent,
+            type: file.mimetype.startsWith('video') ? 'video' : 'image',
           };
         })
       );

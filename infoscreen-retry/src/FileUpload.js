@@ -9,10 +9,30 @@ const FileUploadForm = ({ onUpload }) => {
   const [texts, setTexts] = useState({});
   const [duration, setDuration] = useState('');
   const [text, setText] = useState('');
+  const [txtFileContent, setTxtFileContent] = useState(''); // New state variable for .txt file content
+  const [isTxtFileUploaded, setIsTxtFileUploaded] = useState(false);
+
 
   const onDrop = useCallback((acceptedFiles) => {
+    let txtFileDetected = false;
+    // Process each file
+    acceptedFiles.forEach(file => {
+      if (file.name.endsWith('.txt')) {
+        txtFileDetected = true;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setTxtFileContent(e.target.result); // Set the content of .txt file
+        };
+        reader.readAsText(file);
+      }
+    });
+
+    setIsTxtFileUploaded(txtFileDetected);
+  
+    // After processing all files, update the state with the new list of files
     setFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
   }, []);
+  
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
@@ -104,35 +124,12 @@ const FileUploadForm = ({ onUpload }) => {
         {files.map((file, index) => (
           <li key={index}>
             <button onClick={() => handleRemoveFile(file.name)}>Remove</button>
-            <img
-              src={URL.createObjectURL(file)}
-              alt={file.name}
-              style={{ width: '100px', height: '100px' }}
-            />
-            <input
-              type="number"
-              value={fileOrder[file.name] || ''}
-              onChange={(e) => handleFileOrderChange(file.name, e.target.value)}
-              placeholder="Order"
-            />
-            <label>
-              Duration for media {index + 1} (ms):
-              <input
-                type="number"
-                value={durations[file.name] || ''}
-                onChange={(e) => handleFileDurationChange(file.name, e.target.value)}
-                placeholder="Enter duration"
-              />
-            </label>
-            <label>
-              Optional Text for media {index + 1}:
-              <input
-                type="text"
-                value={texts[file.name] || ''}
-                onChange={(e) => handleFileTextChange(file.name, e.target.value)}
-                placeholder="Enter text"
-              />
-            </label>
+            <img src={URL.createObjectURL(file)} alt={file.name} style={{ width: '100px', height: '100px' }} />
+            <input type="number" value={fileOrder[file.name] || ''} onChange={(e) => handleFileOrderChange(file.name, e.target.value)} placeholder="Order" />
+            <input type="number" value={durations[file.name] || ''} onChange={(e) => handleFileDurationChange(file.name, e.target.value)} placeholder="Duration (ms)" />
+            {!file.name.endsWith('.txt') && (
+              <input type="text" value={texts[file.name] || ''} onChange={(e) => handleFileTextChange(file.name, e.target.value)} placeholder="Optional Text" />
+            )}
           </li>
         ))}
       </ul>

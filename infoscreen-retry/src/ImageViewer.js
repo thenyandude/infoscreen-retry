@@ -49,38 +49,51 @@ const ImageViewer = () => {
     }
   };
 
+  const isTextFile = (path) => {
+    return path.endsWith('.txt');
+  };
+
   return (
     <div>
       {mediaItems.length > 0 && (
         <div>
-          {mediaItems[currentMediaIndex]?.type === 'image' ? (
-            // Display image
-            <img
-              key={currentMediaIndex}
-              src={`http://localhost:3001/media/${mediaItems[currentMediaIndex]?.path}`}
-              alt={`Image ${currentMediaIndex + 1}`}
-            />
-          ) : (
-            // Display video
-            <div onClick={handleVideoClick}>
-              <video
-                key={currentMediaIndex}
-                id="mediaVideo"
-                src={`http://localhost:3001/media/${mediaItems[currentMediaIndex]?.path}`}
-                type="video/mp4"
-                muted
-                autoPlay
-                controls
-              />
+          {isTextFile(mediaItems[currentMediaIndex]?.path) ? (
+            // Display text content for text files
+            <div key={currentMediaIndex}>
+              {mediaItems[currentMediaIndex]?.text}
             </div>
+          ) : (
+            mediaItems[currentMediaIndex]?.type === 'image' ? (
+              // Display image
+              <img
+                key={currentMediaIndex}
+                src={`http://localhost:3001/media/${mediaItems[currentMediaIndex]?.path}`}
+                alt={`Image ${currentMediaIndex + 1}`}
+              />
+            ) : (
+              // Display video
+              <div onClick={handleVideoClick}>
+                <video
+                  key={currentMediaIndex}
+                  id="mediaVideo"
+                  src={`http://localhost:3001/media/${mediaItems[currentMediaIndex]?.path}`}
+                  type="video/mp4"
+                  muted
+                  autoPlay
+                  controls
+                />
+              </div>
+            )
           )}
-
           {/* Display optional text */}
-          <div>{mediaItems[currentMediaIndex]?.text}</div>
+          {!isTextFile(mediaItems[currentMediaIndex]?.path) && (
+            <div>{mediaItems[currentMediaIndex]?.text}</div>
+          )}
         </div>
       )}
     </div>
   );
 };
+
 
 export default ImageViewer;
