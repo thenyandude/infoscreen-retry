@@ -39,12 +39,21 @@ app.post('/upload', (req, res) => {
       const mediaData = await Promise.all(
         req.files.map(async (file, index) => {
           const isVideo = file.mimetype.startsWith('video');
-          const duration = isVideo ? await getVideoDuration(file.path) : undefined;
+          let duration;
+
+          if (isVideo) {
+            // If it's a video, get the duration from the video metadata
+            const videoDuration = await getVideoDuration(file.path);
+            duration = videoDuration ? videoDuration * 1000 : undefined; // Convert to milliseconds
+          } else {
+            // If it's an image, use the duration provided from the client-side
+            duration = req.body[`duration_${index}`] ? parseInt(req.body[`duration_${index}`], 10) : undefined;
+          }
 
           return {
             _id: index.toString(),
             path: file.originalname,
-            duration: duration ? duration * 1000 : undefined, // Convert to milliseconds
+            duration: duration, // Convert to milliseconds
             order: index + 1,
             text: req.body[`text_${index}`] || '',
             type: isVideo ? 'video' : 'image',

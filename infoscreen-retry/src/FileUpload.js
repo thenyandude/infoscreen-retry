@@ -78,6 +78,7 @@ const FileUploadForm = ({ onUpload }) => {
       });
 
       if (response.ok) {
+        console.log(formData);
         setFiles([]);
         setFileOrder({});
         setDurations({});
