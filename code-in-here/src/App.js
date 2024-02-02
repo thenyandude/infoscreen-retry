@@ -6,6 +6,7 @@ import FileManager from './FileManager';
 import LoginPage from './Login';
 import RegisterPage from './Register';
 import ProtectedRoute from './middleware/ProtectedRoute';
+import Test from './Test';
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
         <Route path="/" element={<LoginPage/>}   />
         <Route path="/r" element={<RegisterPage/>}   />
 
+        <Route path="/test" element = {<Test/>} ></Route>
         </Routes>
     </Router>
   );

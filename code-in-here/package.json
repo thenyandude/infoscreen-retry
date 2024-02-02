@@ -9,6 +9,7 @@
     "axios": "^1.6.2",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
+    "concurrently": "^8.2.2",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
@@ -30,8 +31,8 @@
   },
   "scripts": {
     "front": "react-scripts start",
-    "back" : "nodemon ./src/server.js",
-    "go": "npm:front && npm:back ",
+    "back": "nodemon ./src/server.js",
+    "go": "concurrently \"npm run front\"  \"npm run back\" ",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

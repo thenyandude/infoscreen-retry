@@ -67,7 +67,7 @@ const ImageViewer = () => {
               // Display image
               <img
                 key={currentMediaIndex}
-                src={`http://localhost:3001/media/${mediaItems[currentMediaIndex]?.path}`}
+                src={`/media/${mediaItems[currentMediaIndex]?.path}`}
                 alt={`Image ${currentMediaIndex + 1}`}
               />
             ) : (
@@ -76,7 +76,7 @@ const ImageViewer = () => {
                 <video
                   key={currentMediaIndex}
                   id="mediaVideo"
-                  src={`http://localhost:3001/media/${mediaItems[currentMediaIndex]?.path}`}
+                  src={`/media/${mediaItems[currentMediaIndex]?.path}`}
                   type="video/mp4"
                   muted
                   autoPlay

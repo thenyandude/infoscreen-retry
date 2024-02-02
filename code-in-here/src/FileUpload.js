@@ -15,6 +15,8 @@ const FileUploadForm = ({ onUpload }) => {
 
   const onDrop = useCallback((acceptedFiles) => {
     let txtFileDetected = false;
+    console.log("DROPPED!")
+    console.log(acceptedFiles)
     // Process each file
     acceptedFiles.forEach(file => {
       if (file.name.endsWith('.txt')) {

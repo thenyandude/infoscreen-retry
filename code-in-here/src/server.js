@@ -27,6 +27,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
+  limits: { fileSize: 10737418240 }
 }).array('media', 10);
 
 let uploadedMedia = [];
@@ -182,7 +183,7 @@ app.delete('/removeMedia/:mediaId', (req, res) => {
   }
 });
 
-app.use('/media', express.static(path.join(__dirname, 'public', 'media')));
+app.use('/media', express.static(path.join(__dirname, 'public/media')));
 
 
 app.post('/api/login', async (req, res) => {
