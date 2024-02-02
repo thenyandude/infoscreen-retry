@@ -101,27 +101,28 @@ const FileManager = () => {
   };
 
   return (
-    <div>
-      <div className="media-grid">
-        {mediaData.map((media, index) => (
-          <div key={index} className="media-item">
-            {media.type === 'image' ? (
-              // Display image
-              <img
-                src={`http://localhost:3001/media/${media.path}`}
-                alt={`Media ${index + 1}`}
-                style={{ width: '100px', height: '100px', objectFit: 'cover' }}
-              />
-            ) : (
-              // Display video
-              <video
-                src={`http://localhost:3001/media/${media.path}`}
-                type="video/mp4"
-                autoPlay
-                controls
-                style={{ width: '100px', height: '100px', objectFit: 'cover' }}
-              />
-            )}
+          <div>
+      {mediaData.map((media, index) => (
+        <div key={media._id} className="media-item">
+          {media.type === 'image' && (
+            <img
+              src={`/media/${media.path}`}
+              alt={media.text}
+              style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+            />
+          )}
+          {media.type === 'video' && (
+            <video
+              src={`/media/${media.path}`}
+              controls
+              style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+            />
+          )}
+          {media.type === 'text' && (
+            <a href={`/media/${media.path}`} target="_blank" rel="noopener noreferrer">
+              {media.text || "View Text"}
+            </a>
+          )}
             <span>Order:</span>
             <input
               type="number"
@@ -144,7 +145,6 @@ const FileManager = () => {
           </div>
         ))}
       </div>
-    </div>
   );
 };
 
