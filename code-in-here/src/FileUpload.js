@@ -123,17 +123,30 @@ const FileUploadForm = ({ onUpload }) => {
         <p>Drag & drop some files here, or click to select files</p>
       </div>
       <ul>
-        {files.map((file, index) => (
-          <li key={index}>
-            <button onClick={() => handleRemoveFile(file.name)}>Remove</button>
-            <img src={URL.createObjectURL(file)} alt={file.name} style={{ width: '100px', height: '100px' }} />
-            <input type="number" value={fileOrder[file.name] || ''} onChange={(e) => handleFileOrderChange(file.name, e.target.value)} placeholder="Order" />
-            <input type="number" value={durations[file.name] || ''} onChange={(e) => handleFileDurationChange(file.name, e.target.value)} placeholder="Duration (ms)" />
-            {!file.name.endsWith('.txt') && (
-              <input type="text" value={texts[file.name] || ''} onChange={(e) => handleFileTextChange(file.name, e.target.value)} placeholder="Optional Text" />
-            )}
-          </li>
-        ))}
+      {files.map((file, index) => (
+  <li key={index}>
+    <button onClick={() => handleRemoveFile(file.name)}>Remove</button>
+    {/* Conditional rendering based on file type */}
+    {file.type.startsWith('image/') && (
+      <img src={URL.createObjectURL(file)} alt={file.name} style={{ width: '100px', height: '100px' }} />
+    )}
+    {file.type.startsWith('video/') && (
+      <video width="100" height="100" controls>
+        <source src={URL.createObjectURL(file)} type={file.type} />
+        Your browser does not support the video tag.
+      </video>
+    )}
+    {file.name.endsWith('.txt') && (
+      <p>{txtFileContent}</p> // Display the content of the text file
+    )}
+    <input type="number" value={fileOrder[file.name] || ''} onChange={(e) => handleFileOrderChange(file.name, e.target.value)} placeholder="Order" />
+    <input type="number" value={durations[file.name] || ''} onChange={(e) => handleFileDurationChange(file.name, e.target.value)} placeholder="Duration (ms)" />
+    {!file.name.endsWith('.txt') && (
+      <input type="text" value={texts[file.name] || ''} onChange={(e) => handleFileTextChange(file.name, e.target.value)} placeholder="Optional Text" />
+    )}
+  </li>
+))}
+
       </ul>
       <button onClick={handleSubmit}>Submit</button>
     </div>
