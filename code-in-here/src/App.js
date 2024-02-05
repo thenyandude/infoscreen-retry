@@ -13,12 +13,18 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/v" element={<ImageViewer />} />
-        <Route path="/upload" element={<FileUpload/>} />
 
         <Route path="/m" element={
         <ProtectedRoute requiredRole="admin">
           <FileManager/>
         </ProtectedRoute>}/>
+
+        <Route path="/u" element={
+        <ProtectedRoute requiredRole="admin">
+          <FileUpload/>
+        </ProtectedRoute>}/>
+
+        
 
         <Route path="/" element={<LoginPage/>}   />
         <Route path="/r" element={<RegisterPage/>}   />

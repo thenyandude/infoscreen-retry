@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './FileManager.css';
+import { Link } from 'react-router-dom';
+
 
 const FileManager = () => {
   const [mediaData, setMediaData] = useState([]);
@@ -101,6 +103,8 @@ const FileManager = () => {
   };
 
   return (
+    <div className="file-manager-container">
+
           <div className='media-grid'>
       {mediaData.map((media, index) => (
         <div key={media._id} className="media-item">
@@ -144,7 +148,14 @@ const FileManager = () => {
             <button onClick={() => handleRemoveMedia(media._id)}>Remove</button>
           </div>
         ))}
+      
+    </div>
+    <div className='nav-button-container'>
+        <Link to = "/u">
+        <button> Go to upload</button>
+        </Link>
       </div>
+    </div>
   );
 };
 

@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import './FileUploadForm.css';
+import { Link } from 'react-router-dom';
 
 const FileUploadForm = ({ onUpload }) => {
   const [files, setFiles] = useState([]);
@@ -149,7 +150,13 @@ const FileUploadForm = ({ onUpload }) => {
 
       </ul>
       <button className='upload-button' onClick={handleSubmit}>Submit</button>
+
+      <Link to = "/m">
+      <button> Go to manage</button>
+      </Link>
+
     </div>
+    
   );
 };
 

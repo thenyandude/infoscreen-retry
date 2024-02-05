@@ -50,6 +50,17 @@ button {
   border-radius: 4px;
 }
 
+.nav-button-container {
+  text-align: center; /* Center the button */
+  margin-top: 20px;
+}
+
+.file-manager-container {
+  display: flex;
+  flex-direction: column;
+}
+
+
 input{
   text-align: center;
 }
