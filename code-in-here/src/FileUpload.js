@@ -148,7 +148,7 @@ const FileUploadForm = ({ onUpload }) => {
 ))}
 
       </ul>
-      <button onClick={handleSubmit}>Submit</button>
+      <button className='upload-button' onClick={handleSubmit}>Submit</button>
     </div>
   );
 };

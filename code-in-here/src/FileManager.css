@@ -1,5 +1,9 @@
 /* Add this CSS to your stylesheet or component styles */
 
+body{
+  background-color: #2b1c3c;
+}
+
 .media-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -9,8 +13,11 @@
 .media-item {
   position: relative;
   overflow: hidden; /* Ensure images don't overflow their container */
-  background-color: aquamarine;
+  background-color: #6D52B3;
   height: 300px;
+  color: white;
+  border-radius: 4px;
+
 }
 
 .media-item img {
@@ -28,14 +35,21 @@
 .media-item a {
   height: 100px;
   text-align: center;
+  color: #ffffff;
+  text-decoration: none;
 }
 
 button {
-  background-color: red;
+  background-color: #808080;
   color: white;
   border: none;
   padding: 5px;
   cursor: pointer;
   width: 100px;
   margin: 5px;
+  border-radius: 4px;
+}
+
+input{
+  text-align: center;
 }

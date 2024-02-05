@@ -11,7 +11,7 @@
 /* FileUploadForm.css */
 
 .dropzone {
-  border: 4px dashed #838383;
+  border: 5px dashed #5c9915;
   border-radius: 4px;
   padding: 20px;
   text-align: center;
@@ -73,4 +73,9 @@ li button {
   cursor: pointer;
   width: 100px;
   margin: 5px;
+}
+
+.upload-button{
+  color:white;
+  background-color: #5c9915;
 }

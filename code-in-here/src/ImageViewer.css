@@ -6,6 +6,8 @@ div {
     align-items: center;
     justify-content: center;
     height: 100vh;
+    color: white;
+    font-size: 30px;
   }
   
   h2 {
@@ -26,6 +28,7 @@ div {
     height: auto;
   }
   
-  .text{
-    font-size: 40px;
+  .text-media{
+    font-size: 60px;
+    color: white;
   }

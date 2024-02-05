@@ -59,7 +59,7 @@ const ImageViewer = () => {
         <div>
           {isTextFile(mediaItems[currentMediaIndex]?.path) ? (
             // Display text content for text files
-            <div key={currentMediaIndex}>
+            <div key={currentMediaIndex} className ='text-media'>
               {mediaItems[currentMediaIndex]?.text}
             </div>
           ) : (
