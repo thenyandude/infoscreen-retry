@@ -9,12 +9,25 @@
 .media-item {
   position: relative;
   overflow: hidden; /* Ensure images don't overflow their container */
+  background-color: aquamarine;
+  height: 300px;
 }
 
 .media-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.media-item video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.media-item a {
+  height: 100px;
+  text-align: center;
 }
 
 button {

@@ -101,7 +101,7 @@ const FileManager = () => {
   };
 
   return (
-          <div>
+          <div className='media-grid'>
       {mediaData.map((media, index) => (
         <div key={media._id} className="media-item">
           {media.type === 'image' && (
