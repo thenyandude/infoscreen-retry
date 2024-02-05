@@ -7,13 +7,28 @@ const ffprobePath = require('ffprobe-static').path;
 const crypto = require('crypto');
 const fs = require('fs');
 
-const User = require('./models/User');
+const mongoose = require('mongoose')
+const dburi = "mongodb+srv://nyan:AOAEUkm7gAqv0xEr@infoscreen-data.93a1fol.mongodb.net"
+
+const DbUser = require('./models/DbUser');
+
+
 
 
 const app = express();
 
+mongoose.connect(dburi, { useNewUrlParser: true, useUnifiedTopology: true });
+
+const db = mongoose.connection;
+
+
 app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(express.json());
+
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log('Connected successfully');
+});
 
 // Set the path to ffprobe
 ffmpeg.setFfprobePath(ffprobePath);
@@ -187,53 +202,53 @@ app.use('/media', express.static(path.join(__dirname, 'public/media')));
 
 
 app.post('/api/login', async (req, res) => {
-  const { username, password } = req.body;
-
-  try {
-    const userData = User.load(username);
-    if (!userData) {
-      return res.status(401).send('User not found');
+    const { username, password } = req.body;
+  
+    try {
+      const user = await DbUser.findOne({ username: username });
+      if (!user) {
+        return res.status(401).send('User not found');
+      }
+  
+      if (await user.validatePassword(password)) {
+        // User authenticated, generate a token
+        const token = crypto.randomBytes(16).toString('hex');
+        // Include the user's role in the response
+        res.json({ token: token, role: user.role, message: 'Login successful' });
+      } else {
+        res.status(401).send('Invalid credentials');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      res.status(500).send('Internal server error');
     }
+  });
+  
 
-    const user = new User(userData.username, userData.password, userData.role);
-    if (await user.validatePassword(password)) {
-      // User authenticated, generate a token
-      const token = crypto.randomBytes(16).toString('hex');
-      // Include the user's role in the response
-      res.json({ token: token, role: user.role, message: 'Login successful' });
-    } else {
-      res.status(401).send('Invalid credentials');
+
+
+
+  app.post('/api/register', async (req, res) => {
+    const { username, password } = req.body;
+  
+    // Check if user already exists
+    const existingUser = await DbUser.findOne({ username: username });
+    if (existingUser) {
+      return res.status(409).send('User already exists');
     }
-  } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).send('Internal server error');
-  }
-});
-
-
-
-
-
-app.post('/api/register', async (req, res) => {
-  const { username, password } = req.body;
-
-  // Check if user already exists
-  if (User.load(username)) {
-    return res.status(409).send('User already exists');
-  }
-
-  try {
-    const newUser = new User(username, '');
-    await newUser.setPassword(password); // Hash password
-    User.save(username, newUser.password); // Save new user
-
-    res.status(201).send('User registered successfully');
-  } catch (error) {
-    console.error('Registration error:', error);
-    res.status(500).send('Internal server error');
-  }
-});
-
+  
+    try {
+      // Create a new user and save to the database
+      const newUser = new DbUser({ username, password });
+      await newUser.save();
+  
+      res.status(201).send('User registered successfully');
+    } catch (error) {
+      console.error('Registration error:', error);
+      res.status(500).send('Internal server error');
+    }
+  });
+  
 
 
 const PORT = process.env.PORT || 3001;
