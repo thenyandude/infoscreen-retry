@@ -85,7 +85,6 @@ const ImageViewer = () => {
               </div>
             )
           )}
-          {/* Display optional text */}
           {!isTextFile(mediaItems[currentMediaIndex]?.path) && (
             <div>{mediaItems[currentMediaIndex]?.text}</div>
           )}

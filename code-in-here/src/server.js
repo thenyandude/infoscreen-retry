@@ -11,6 +11,7 @@ const mongoose = require('mongoose')
 const dburi = "mongodb+srv://nyan:AOAEUkm7gAqv0xEr@infoscreen-data.93a1fol.mongodb.net"
 
 const DbUser = require('./models/DbUser');
+const Media = require('./models/Media'); // Adjust the path to your Media model
 
 
 
@@ -64,60 +65,59 @@ app.post('/upload', (req, res) => {
         txtFileContent = fs.readFileSync(textFile.path, 'utf8');
       }
 
-      const mediaData = await Promise.all(
-        req.files.map(async (file, index) => {
+        for (const [index, file] of req.files.entries()) {
           const isVideo = file.mimetype.startsWith('video');
           let duration;
           let textContent = '';
-      
+
           if (isVideo) {
-            // If it's a video, get the duration from the video metadata
             const videoDuration = await getVideoDuration(file.path);
             duration = videoDuration ? videoDuration * 1000 : undefined;
           } else {
-            // If it's an image or text file, use the duration provided from the client-side
             duration = req.body[`duration_${index}`] ? parseInt(req.body[`duration_${index}`], 10) : undefined;
           }
-      
+
           if (file.originalname.endsWith('.txt')) {
-            // If it's the .txt file, use its content as the text
             textContent = txtFileContent;
           } else {
-            // For other files, use the text provided from the client-side
             textContent = req.body[`text_${index}`] || '';
           }
-      
-          // Determine the file type
-          let fileType;
+
+          let fileType = 'other';
           if (file.mimetype.startsWith('video')) {
             fileType = 'video';
           } else if (file.mimetype.startsWith('image')) {
             fileType = 'image';
           } else if (file.mimetype.startsWith('text')) {
             fileType = 'text';
-          } else {
-            fileType = 'other'; // For any other types, or you can further refine the conditions
           }
-      
-          return {
-            _id: index.toString(),
-            path: file.originalname,
+
+          // Create a new Media document and save it to MongoDB
+          const newMedia = new Media({
+            title: file.originalname, // Or any other title logic
+            type: fileType,
+            path: file.path, // Adjust if needed
             duration: duration,
             order: index + 1,
             text: textContent,
-            type: fileType,
-          };
-        })
-      );      
+            // other fields...
+          });
 
-      uploadedMedia = [...uploadedMedia, ...mediaData];
-      console.log('Media received:', mediaData);
-      res.send('Media uploaded');
-    }
+          try {
+            await newMedia.save();
+          } catch (saveError) {
+            console.error('Error saving media item to database:', saveError);
+            // Handle error
+          }
+        }
+
+        console.log('Media saved to database');
+        res.send('Media uploaded');
+      }
+    });
   });
-});
 
-
+  
 function getVideoDuration(filePath) {
   return new Promise((resolve, reject) => {
     ffmpeg.ffprobe(filePath, (err, metadata) => {
