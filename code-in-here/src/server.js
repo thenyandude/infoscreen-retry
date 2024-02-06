@@ -54,10 +54,8 @@ app.post('/upload', (req, res) => {
       console.error(err);
       res.status(500).send('Internal Server Error');
     } else {
-
       console.log('Files uploaded:', req.files.length);
 
-      
       let txtFileContent = '';
       const textFile = req.files.find(file => file.originalname.endsWith('.txt'));
       
@@ -65,57 +63,59 @@ app.post('/upload', (req, res) => {
         txtFileContent = fs.readFileSync(textFile.path, 'utf8');
       }
 
-        for (const [index, file] of req.files.entries()) {
-          const isVideo = file.mimetype.startsWith('video');
-          let duration;
-          let textContent = '';
+      for (const [index, file] of req.files.entries()) {
+        const isVideo = file.mimetype.startsWith('video');
+        let duration;
+        let textContent = '';
 
-          if (isVideo) {
-            const videoDuration = await getVideoDuration(file.path);
-            duration = videoDuration ? videoDuration * 1000 : undefined;
-          } else {
-            duration = req.body[`duration_${index}`] ? parseInt(req.body[`duration_${index}`], 10) : undefined;
-          }
-
-          if (file.originalname.endsWith('.txt')) {
-            textContent = txtFileContent;
-          } else {
-            textContent = req.body[`text_${index}`] || '';
-          }
-
-          let fileType = 'other';
-          if (file.mimetype.startsWith('video')) {
-            fileType = 'video';
-          } else if (file.mimetype.startsWith('image')) {
-            fileType = 'image';
-          } else if (file.mimetype.startsWith('text')) {
-            fileType = 'text';
-          }
-
-          // Create a new Media document and save it to MongoDB
-          const newMedia = new Media({
-            title: file.originalname, // Or any other title logic
-            type: fileType,
-            path: file.path, // Adjust if needed
-            duration: duration,
-            order: index + 1,
-            text: textContent,
-            // other fields...
-          });
-
-          try {
-            await newMedia.save();
-          } catch (saveError) {
-            console.error('Error saving media item to database:', saveError);
-            // Handle error
-          }
+        if (isVideo) {
+          const videoDuration = await getVideoDuration(file.path);
+          duration = videoDuration ? videoDuration * 1000 : undefined;
+        } else {
+          duration = req.body[`duration_${index}`] ? parseInt(req.body[`duration_${index}`], 10) : undefined;
         }
 
-        console.log('Media saved to database');
-        res.send('Media uploaded');
+        if (file.originalname.endsWith('.txt')) {
+          textContent = txtFileContent;
+        } else {
+          textContent = req.body[`text_${index}`] || '';
+        }
+
+        let fileType = 'other';
+        if (file.mimetype.startsWith('video')) {
+          fileType = 'video';
+        } else if (file.mimetype.startsWith('image')) {
+          fileType = 'image';
+        } else if (file.mimetype.startsWith('text')) {
+          fileType = 'text';
+        }
+
+        // Create a new Media document and save it to MongoDB
+        const newMedia = new Media({
+          title: file.originalname, // Or any other title logic
+          type: fileType,
+          path: file.originalname, // Adjust if needed
+          duration: duration,
+          order: index + 1,
+          text: textContent,
+          // other fields...
+        });
+
+        try {
+          await newMedia.save();
+        } catch (saveError) {
+          console.error('Error saving media item to database:', saveError);
+          // Handle error
+        }
       }
-    });
+
+      console.log('Media saved to database');
+      res.send('Media uploaded');
+    }
   });
+});
+
+
 
   
 function getVideoDuration(filePath) {
@@ -131,10 +131,16 @@ function getVideoDuration(filePath) {
 }
 
 
-app.get('/getMedia', (req, res) => {
-  const mediaPaths = getUploadedMedia();
-  res.json({ uploadedMedia: mediaPaths });
+app.get('/getMedia', async (req, res) => {
+  try {
+    const mediaItems = await Media.find({}).sort({ order: 1 }); // Fetch media items from MongoDB and sort them by order
+    res.json({ uploadedMedia: mediaItems });
+  } catch (error) {
+    console.error('Error fetching media from database:', error);
+    res.status(500).send('Internal server error');
+  }
 });
+
 
 function getUploadedMedia() {
   return uploadedMedia;
@@ -186,17 +192,24 @@ app.put('/updateText/:mediaId', (req, res) => {
 });
 
 
-app.delete('/removeMedia/:mediaId', (req, res) => {
+app.delete('/removeMedia/:mediaId', async (req, res) => {
   const { mediaId } = req.params;
-  const mediaIndex = uploadedMedia.findIndex((media) => media._id === mediaId);
 
-  if (mediaIndex !== -1) {
-    uploadedMedia.splice(mediaIndex, 1);
-    res.send('Media removed');
-  } else {
-    res.status(404).send('Media not found');
+  try {
+    const result = await Media.findByIdAndDelete(mediaId);
+    if (result) {
+      res.send('Media removed successfully');
+    } else {
+      res.status(404).send('Media not found');
+    }
+  } catch (error) {
+    console.error('Error removing media:', error);
+    res.status(500).send('Internal server error');
   }
 });
+
+
+
 
 app.use('/media', express.static(path.join(__dirname, 'public/media')));
 
