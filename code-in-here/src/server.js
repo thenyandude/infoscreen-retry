@@ -146,50 +146,75 @@ function getUploadedMedia() {
   return uploadedMedia;
 }
 
-app.put('/updateOrder/:mediaId/:newOrder', (req, res) => {
-  const { mediaId, newOrder } = req.params;
-  const { order } = req.body; // Extract order from the JSON body
-
-  // Assuming uploadedMedia is defined and represents your data structure
-  const mediaToUpdate = uploadedMedia.find((media) => media._id === mediaId);
-
-  if (!mediaToUpdate) {
-    console.error(`Media with ID ${mediaId} not found`);
-    res.status(404).send('Media not found');
-    return;
-  }
-
-  // Update the order property in your data structure
-  mediaToUpdate.order = parseInt(order, 10);
-
-  res.status(200).send('Order updated successfully');
-});
-
-app.put('/updateDuration/:mediaId/:newDuration', (req, res) => {
-  const { mediaId, newDuration } = req.params;
-  const mediaToUpdate = uploadedMedia.find((media) => media._id === mediaId);
-
-  if (mediaToUpdate) {
-    mediaToUpdate.duration = parseInt(newDuration, 10);
-    res.send('Duration updated');
-  } else {
-    res.status(404).send('Media not found');
-  }
-});
-
-app.put('/updateText/:mediaId', (req, res) => {
+app.put('/updateOrder/:mediaId', async (req, res) => {
   const { mediaId } = req.params;
-  const { text } = req.body; // Extract text from the JSON body
+  const { newOrder } = req.body;
 
-  const mediaToUpdate = uploadedMedia.find((media) => media._id === mediaId);
+  try {
+    const mediaToUpdate = await Media.findById(mediaId);
+    if (!mediaToUpdate) {
+      return res.status(404).send('Media not found');
+    }
 
-  if (mediaToUpdate) {
-    mediaToUpdate.text = text;
-    res.send('Text updated');
-  } else {
-    res.status(404).send('Media not found');
+    mediaToUpdate.order = parseInt(newOrder, 10);
+    await mediaToUpdate.save();
+
+    res.status(200).send('Order updated successfully');
+  } catch (error) {
+    console.error('Error updating order:', error);
+    res.status(500).send('Internal server error');
   }
 });
+
+
+
+app.put('/updateDuration/:mediaId', async (req, res) => {
+  const { mediaId } = req.params;
+  const { newDuration } = req.body; // Make sure this matches what you send in Postman
+
+  try {
+    const mediaToUpdate = await Media.findById(mediaId);
+    if (!mediaToUpdate) {
+      return res.status(404).send('Media not found');
+    }
+
+    mediaToUpdate.duration = parseInt(newDuration, 10);
+    await mediaToUpdate.save();
+
+    res.send('Duration updated');
+  } catch (error) {
+    console.error('Error updating duration:', error);
+    res.status(500).send('Internal server error');
+  }
+});
+
+
+app.put('/updateText/:mediaId', async (req, res) => {
+  const { mediaId } = req.params;
+  const { text } = req.body;
+
+  try {
+    // Find the media document in the database by its ID
+    const mediaToUpdate = await Media.findById(mediaId);
+
+    // Check if the media was found
+    if (!mediaToUpdate) {
+      return res.status(404).send('Media not found');
+    }
+
+    // Update the text field
+    mediaToUpdate.text = text;
+
+    // Save the updated media document back to the database
+    await mediaToUpdate.save();
+
+    res.send('Text updated');
+  } catch (error) {
+    console.error('Error updating text:', error);
+    res.status(500).send('Internal server error');
+  }
+});
+
 
 
 app.delete('/removeMedia/:mediaId', async (req, res) => {

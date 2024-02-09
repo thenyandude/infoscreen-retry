@@ -49,10 +49,14 @@ const FileManager = () => {
 
   const handleDurationChange = async (mediaId, newDuration) => {
     try {
-      const response = await fetch(`http://localhost:3001/updateDuration/${mediaId}/${newDuration}`, {
+      const response = await fetch(`http://localhost:3001/updateDuration/${mediaId}`, {
         method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ newDuration }) // Send newDuration in the body
       });
-
+  
       if (response.ok) {
         fetchMedia();
         console.log('Duration updated successfully!');
@@ -63,6 +67,7 @@ const FileManager = () => {
       console.error('Error updating duration:', error);
     }
   };
+  
 
   const handleTextChange = async (mediaId, newText) => {
     try {
