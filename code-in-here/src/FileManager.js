@@ -27,14 +27,14 @@ const FileManager = () => {
 
   const handleOrderChange = async (mediaId, newOrder) => {
     try {
-      const response = await fetch(`http://localhost:3001/updateOrder/${mediaId}/${newOrder}`, {
+      const response = await fetch(`http://localhost:3001/updateOrder/${mediaId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ order: newOrder }),
+        body: JSON.stringify({ newOrder }) // Send newOrder in the body
       });
-
+  
       if (response.ok) {
         console.log('Order updated successfully!');
         // If the update is successful, fetch the media again to reflect changes
@@ -46,6 +46,7 @@ const FileManager = () => {
       console.error('Error updating order:', error);
     }
   };
+  
 
   const handleDurationChange = async (mediaId, newDuration) => {
     try {
