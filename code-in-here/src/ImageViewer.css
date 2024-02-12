@@ -1,0 +1,33 @@
+.media-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: white;
+}
+
+.media-content {
+  width: 90%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.media-image, .media-video {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.media-text {
+  font-size: 30px;
+  color: white;
+  margin-top: 20px; /* Adjust as needed */
+}
+
+.text-media {
+  font-size: 60px;
+  color: white;
+}

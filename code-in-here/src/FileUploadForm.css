@@ -1,0 +1,118 @@
+.file-upload-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; /* Full height of the viewport */
+  width: 100vw; /* Full width of the viewport */
+  padding: 20px; /* Added padding for inner spacing */
+  box-sizing: border-box; /* Include padding in width and height */
+  background-color: #2b1c3c; /* Background color for consistency */
+}
+
+.dropzone {
+  border: 5px dashed #5c9915;
+  border-radius: 4px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 20px;
+  height: 200px;
+  width: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white; /* Text color for visibility */
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 20px auto;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* Define 5 columns */
+  gap: 20px; /* Gap between grid items */
+}
+
+li {
+  background-color: #483d8b; /* Distinct background for each item */
+  border-radius: 8px; /* Rounded corners for visual appeal */
+  padding: 10px; /* Padding for internal spacing */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
+  color: white; /* Text color for visibility */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centers content vertically */
+  align-items: center; /* Centers content horizontally */
+}
+
+li img, li video {
+  max-width: 100%; /* Responsive media width */
+  height: auto;
+  object-fit: cover;
+  border-radius: 4px; /* Rounded corners for media */
+}
+
+li p {
+  color: #ffffff;
+  margin: 10px 0;
+  word-break: break-word; /* Break long text */
+}
+
+li div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+li input {
+  padding: 5px 10px; /* Padding for better touch targets */
+  margin: 5px;
+  border-radius: 4px; /* Consistency in border-radius */
+  border: 3px solid #5c9915; /* Border for definition */
+  align-items: center;
+}
+
+li button {
+  background-color: red;
+  color: white;
+  cursor: pointer;
+}
+/* Upload button and navigation button styles */
+.upload-button, button {
+  background-color: #5c9915;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s;
+}
+
+.upload-button:hover, button:hover{
+  background-color: #57891d;
+}
+
+.manage-button {
+  background-color: #159799;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  text-decoration: none; /* Remove underline from link */
+  display: inline-block; /* Allow padding and width/height */
+  text-align: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  margin-top: 20px;
+}
+
+.manage-button:hover {
+  background-color: #197d7e;
+}
+
