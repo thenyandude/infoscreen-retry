@@ -54,25 +54,23 @@ const ImageViewer = () => {
   };
 
   return (
-    <div>
+    <div className="media-container">
       {mediaItems.length > 0 && (
-        <div>
+        <div className="media-content">
           {isTextFile(mediaItems[currentMediaIndex]?.path) ? (
-            // Display text content for text files
-            <div key={currentMediaIndex} className ='text-media'>
+            <div key={currentMediaIndex} className='text-media'>
               {mediaItems[currentMediaIndex]?.text}
             </div>
           ) : (
             mediaItems[currentMediaIndex]?.type === 'image' ? (
-              // Display image
               <img
                 key={currentMediaIndex}
                 src={`/media/${mediaItems[currentMediaIndex]?.path}`}
                 alt={`Image ${currentMediaIndex + 1}`}
+                className="media-image"
               />
             ) : (
-              // Display video
-              <div onClick={handleVideoClick}>
+              <div onClick={handleVideoClick} className="media-video">
                 <video
                   key={currentMediaIndex}
                   id="mediaVideo"
@@ -85,14 +83,15 @@ const ImageViewer = () => {
               </div>
             )
           )}
-          {!isTextFile(mediaItems[currentMediaIndex]?.path) && (
-            <div>{mediaItems[currentMediaIndex]?.text}</div>
+          {!isTextFile(mediaItems[currentMediaIndex]?.path) && mediaItems[currentMediaIndex]?.text && (
+            <div className="media-text">{mediaItems[currentMediaIndex]?.text}</div>
           )}
         </div>
       )}
     </div>
   );
-};
+  
 
+}
 
 export default ImageViewer;
