@@ -158,7 +158,7 @@ const FileManager = () => {
     </div>
     <div className='nav-button-container'>
         <Link to = "/u">
-        <button> Go to upload</button>
+        <button className='nav-button'> Go to upload</button>
         </Link>
       </div>
     </div>

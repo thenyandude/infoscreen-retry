@@ -118,7 +118,7 @@ const FileUploadForm = ({ onUpload }) => {
   };
 
   return (
-    <div>
+    <div className="file-upload-form">
       <div {...getRootProps()} className="dropzone">
         <input {...getInputProps()} />
         <p>Drag & drop some files here, or click to select files</p>
@@ -126,7 +126,6 @@ const FileUploadForm = ({ onUpload }) => {
       <ul>
       {files.map((file, index) => (
   <li key={index}>
-    <button onClick={() => handleRemoveFile(file.name)}>Remove</button>
     {/* Conditional rendering based on file type */}
     {file.type.startsWith('image/') && (
       <img src={URL.createObjectURL(file)} alt={file.name} style={{ width: '100px', height: '100px' }} />
@@ -145,14 +144,15 @@ const FileUploadForm = ({ onUpload }) => {
     {!file.name.endsWith('.txt') && (
       <input type="text" value={texts[file.name] || ''} onChange={(e) => handleFileTextChange(file.name, e.target.value)} placeholder="Optional Text" />
     )}
+    <button onClick={() => handleRemoveFile(file.name)}>Remove</button>
   </li>
 ))}
 
       </ul>
       <button className='upload-button' onClick={handleSubmit}>Submit</button>
 
-      <Link to = "/m">
-      <button> Go to manage</button>
+      <Link to="/m" className="manage-button">
+        Go to manage
       </Link>
 
     </div>
