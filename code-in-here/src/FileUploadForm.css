@@ -28,10 +28,10 @@
 ul {
   list-style: none;
   padding: 0;
-  margin: 20px auto; /* Center the grid and add spacing */
+  margin: 20px auto;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Responsive grid */
-  gap: 20px;
+  grid-template-columns: repeat(5, 1fr); /* Define 5 columns */
+  gap: 20px; /* Gap between grid items */
 }
 
 li {
