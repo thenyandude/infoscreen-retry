@@ -34,6 +34,7 @@ function RegisterPage() {
 
   return (
     <form onSubmit={handleSubmit} className="register-form">
+      <h1> REGISTER ACOUNT</h1>
       <div className="form-group">
         <label htmlFor="username">Username:</label>
         <input
