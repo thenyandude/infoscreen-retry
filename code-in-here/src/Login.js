@@ -36,6 +36,7 @@ function LoginPage() {
   return (
     <form onSubmit={handleSubmit} className="login-form">
       <div className="form-group">
+      <h1> LOGIN ACOUNT</h1>
         <label htmlFor="username">Username:</label>
         <input
           type="text"
