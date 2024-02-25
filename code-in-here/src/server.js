@@ -47,7 +47,7 @@ db.once('open', function() {
 ffmpeg.setFfprobePath(ffprobePath);
 
 const storage = multer.diskStorage({
-  destination: './public/media/',
+  destination: '/var/www/html/media',
   filename: function (req, file, cb) {
     cb(null, file.originalname);
   },
