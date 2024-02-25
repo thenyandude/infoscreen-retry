@@ -22,8 +22,20 @@ mongoose.connect(dburi, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const db = mongoose.connection;
 
+const allowedOrigins = ['http://10.12.5.16', 'http://localhost:3000'];
 
-app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors({
+  origin: function(origin, callback){
+    // allow requests with no origin (like mobile apps, curl requests)
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+      var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  }
+}));
+
 app.use(express.json());
 
 db.on('error', console.error.bind(console, 'connection error:'));

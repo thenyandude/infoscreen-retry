@@ -30,7 +30,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "front": "react-scripts start",
+    "front": "HOST=0.0.0.0 react-scripts start",
     "back": "nodemon ./src/server.js",
     "go": "concurrently \"npm run front\"  \"npm run back\" ",
     "build": "react-scripts build",

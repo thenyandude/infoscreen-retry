@@ -11,7 +11,7 @@ function LoginPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch('http://localhost:3001/api/login', {
+      const response = await fetch('http://10.12.5.16:3001/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -22,7 +22,7 @@ function LoginPage() {
       if (response.ok) {
         localStorage.setItem('jwtToken', data.token);
         localStorage.setItem('userRole', data.role)
-        navigate('/m')  
+        navigate('/manage')  
       } else {
         // Handle login error
         setErrorMessage(data.message || 'Error logging in');
