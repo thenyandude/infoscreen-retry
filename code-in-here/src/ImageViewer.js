@@ -8,7 +8,7 @@ const ImageViewer = () => {
   useEffect(() => {
     const fetchMedia = async () => {
       try {
-        const response = await fetch('http://localhost:3001/getMedia');
+        const response = await fetch('http://10.12.5.16:3001/getMedia');
         if (response.ok) {
           const data = await response.json();
           console.log('Fetched media:', data.uploadedMedia);

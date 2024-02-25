@@ -12,7 +12,7 @@ const FileManager = () => {
 
   const fetchMedia = async () => {
     try {
-      const response = await fetch('http://localhost:3001/getMedia');
+      const response = await fetch('http://10.12.5.16:3001/getMedia');
       if (response.ok) {
         const data = await response.json();
         console.log('Fetched media:', data.uploadedMedia);
@@ -27,7 +27,7 @@ const FileManager = () => {
 
   const handleOrderChange = async (mediaId, newOrder) => {
     try {
-      const response = await fetch(`http://localhost:3001/updateOrder/${mediaId}`, {
+      const response = await fetch(`http://10.12.5.16:3001/updateOrder/${mediaId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ const FileManager = () => {
 
   const handleDurationChange = async (mediaId, newDuration) => {
     try {
-      const response = await fetch(`http://localhost:3001/updateDuration/${mediaId}`, {
+      const response = await fetch(`http://10.12.5.16:3001/updateDuration/${mediaId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ const FileManager = () => {
 
   const handleTextChange = async (mediaId, newText) => {
     try {
-      const response = await fetch(`http://localhost:3001/updateText/${mediaId}`, {
+      const response = await fetch(`http://10.12.5.16:3001/updateText/${mediaId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ const FileManager = () => {
 
   const handleRemoveMedia = async (mediaId) => {
     try {
-      const response = await fetch(`http://localhost:3001/removeMedia/${mediaId}`, {
+      const response = await fetch(`http://10.12.5.16:3001/removeMedia/${mediaId}`, {
         method: 'DELETE',
       });
 
@@ -157,7 +157,7 @@ const FileManager = () => {
       
     </div>
     <div className='nav-button-container'>
-        <Link to = "/u">
+        <Link to = "/upload">
         <button className='nav-button'> Go to upload</button>
         </Link>
       </div>
