@@ -21,17 +21,30 @@ function LoginPage() {
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem('jwtToken', data.token);
-        localStorage.setItem('userRole', data.role)
-        navigate('/m')  
+        localStorage.setItem('userRole', data.role);
+        localStorage.setItem('isApproved', data.isApproved.toString());
+        if (data.isApproved) {
+          navigate('/m');
+        } else {
+          setErrorMessage('Your account is waiting for approval.');
+        }
+      } else if (response.status === 401 && data.message === 'User not found') {
+        setErrorMessage('User not found. Please register if you don\'t have an account.');
+      } else if (response.status === 401 && data.message === 'Account not approved yet') {
+        setErrorMessage('Your account is not approved yet. Please wait for approval.');
+      } else if (response.status === 401 && data.message === 'Wrong password') {
+        setErrorMessage('Wrong password. Please try again.');
       } else {
-        // Handle login error
-        setErrorMessage(data.message || 'Error logging in');
+        setErrorMessage('An error occurred. Please try again later.');
       }
     } catch (error) {
       console.error('Login error:', error);
       setErrorMessage('Login failed. Please try again.');
     }
   };
+  
+  
+  
 
   return (
     <form onSubmit={handleSubmit} className="login-form">

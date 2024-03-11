@@ -15,6 +15,11 @@ const dbUserSchema = new mongoose.Schema({
         type: String,
         default: 'user',
         enum: ['user', 'admin', 'otherRoles']
+    },
+
+    isApproved: {
+        type: Boolean,
+        default: false
     }
 });
 

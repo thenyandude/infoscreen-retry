@@ -6,7 +6,7 @@ import FileManager from './FileManager';
 import LoginPage from './Login';
 import RegisterPage from './Register';
 import ProtectedRoute from './middleware/ProtectedRoute';
-import Test from './Test';
+import AdminPanel from './AdminPanel'
 
 const App = () => {
   return (
@@ -24,13 +24,14 @@ const App = () => {
           <FileUpload/>
         </ProtectedRoute>}/>
 
-        
+        <Route path="/admin" element={
+        <ProtectedRoute requiredRole="admin">
+          <AdminPanel/>
+        </ProtectedRoute>}/>  // Admin panel route
 
-        <Route path="/" element={<LoginPage/>}   />
-        <Route path="/r" element={<RegisterPage/>}   />
-
-        <Route path="/test" element = {<Test/>} ></Route>
-        </Routes>
+        <Route path="/" element={<LoginPage/>} />
+        <Route path="/r" element={<RegisterPage/>} />
+      </Routes>
     </Router>
   );
 };
