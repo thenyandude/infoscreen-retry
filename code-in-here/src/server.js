@@ -271,39 +271,18 @@ app.post('/api/toggle-approval/:userId', async (req, res) => {
 });
 
 
-app.post('/api/toggle-admin/:userId', async (req, res) => {
+app.post('/api/toggleAdmin/:userId', async (req, res) => {
   const { userId } = req.params;
-  const { userRole } = req.body; // Assuming the user role is included in the request body
-
-  // Check if the requester is authorized to perform this action
-  if (userRole !== 'admin') {
-    return res.status(403).send('You are not authorized to perform this action');
-  }
+  const { newRole } = req.body;
 
   try {
-    const user = await DbUser.findById(userId);
-    if (!user) {
-      return res.status(404).send('User not found');
-    }
-
-    // Prevent demoting 'nyan' from admin status
-    if (user.username === 'nyan') {
-      return res.status(400).send('Cannot change the role of user "nyan"');
-    }
-
-    // Check if the user is already an admin
-    if (user.role === 'admin') {
-      user.role = 'user'; // Demote user from admin to regular user
-      await user.save();
-      return res.send('User role updated to user');
-    } else {
-      return res.status(400).send('User is not an admin');
-    }
+      await DbUser.findByIdAndUpdate(userId, { role: newRole });
+      res.status(200).send('User role updated successfully');
   } catch (error) {
-    console.error('Error updating user role:', error);
-    res.status(500).send('Internal server error');
+      res.status(500).send('Error updating user role');
   }
 });
+
 
 
 

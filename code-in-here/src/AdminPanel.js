@@ -28,27 +28,29 @@ const AdminPanel = () => {
     };
 
 
-    const toggleAdmin = (userId, username, currentRole) => {
-        if (username === 'nyan') {
-            console.log('User "nyan" is already an admin');
-            return;
-        }
-    
-        fetch(`http://localhost:3001/api/toggle-admin/${userId}`, { method: 'POST' })
-            .then(response => {
-                if (response.ok) {
-                    return response.json(); // Parse response JSON
-                } else {
-                    throw new Error('Failed to toggle admin status');
-                }
-            })
-            .then(data => {
-                // Update the user list with the updated user data
-                setUsers(users.map(user => user._id === userId ? { ...user, role: data.role } : user));
-            })
-            .catch(error => console.error('Error toggling admin status:', error));
+    const toggleAdmin = (userId, currentRole) => {
+        const newRole = currentRole === 'admin' ? 'user' : 'admin';
+
+        fetch(`http://localhost:3001/api/toggleAdmin/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ newRole })
+        })
+        .then(response => {
+            if (response.ok) {
+                setUsers(users.map(user => {
+                    if (user._id === userId) {
+                        return { ...user, role: newRole };
+                    }
+                    return user;
+                }));
+            }
+        })
+        .catch(error => console.error('Error updating admin status:', error));
     };
-    
+
     
     
 
@@ -77,9 +79,12 @@ const AdminPanel = () => {
                     {user.username} - Approved: {user.isApproved ? 'Yes' : 'No'} - Role: {user.role}
                     <button onClick={() => toggleApproval(user._id, user.isApproved)}>
                     {user.isApproved ? 'Unapprove' : 'Approve'}
-                </button>                    
-                {(user.role !== 'admin' && user.username !== 'nyan') && <button onClick={() => toggleAdmin(user._id, user.username, user.role)}>{getButtonLabel(user)}</button>
-}
+                </button>         
+
+                <button onClick={() => toggleAdmin(user._id, user.role)}>
+                {user.role === 'admin' ? 'Revoke Admin' : 'Make Admin'}
+                </button>
+
                     <button onClick={() => deleteUser(user._id)}>Delete User</button>
                 </div>
             ))}
