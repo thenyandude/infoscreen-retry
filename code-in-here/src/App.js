@@ -12,14 +12,14 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/v" element={<ImageViewer />} />
+        <Route path="/view" element={<ImageViewer />} />
 
-        <Route path="/m" element={
+        <Route path="/manage" element={
         <ProtectedRoute requiredRole="admin">
           <FileManager/>
         </ProtectedRoute>}/>
 
-        <Route path="/u" element={
+        <Route path="/upload" element={
         <ProtectedRoute requiredRole="admin">
           <FileUpload/>
         </ProtectedRoute>}/>

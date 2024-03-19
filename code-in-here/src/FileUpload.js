@@ -95,7 +95,7 @@ const FileUploadForm = ({ onUpload }) => {
     });
 
     try {
-      const response = await fetch('http://localhost:3001/upload', {
+      const response = await fetch('http://10.12.5.16:3001/upload', {
         method: 'POST',
         body: formData,
       });
@@ -151,7 +151,7 @@ const FileUploadForm = ({ onUpload }) => {
       </ul>
       <button className='upload-button' onClick={handleSubmit}>Submit</button>
 
-      <Link to="/m" className="manage-button">
+      <Link to="/manage" className="manage-button">
         Go to manage
       </Link>
 
