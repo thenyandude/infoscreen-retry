@@ -251,54 +251,128 @@ app.delete('/removeMedia/:mediaId', async (req, res) => {
 app.use('/media', express.static(path.join(__dirname, 'public/media')));
 
 
-app.post('/api/login', async (req, res) => {
-    const { username, password } = req.body;
-  
-    try {
-      const user = await DbUser.findOne({ username: username });
+app.get('/api/users', async (req, res) => {
+
+  try {
+      const users = await DbUser.find({}, '-password'); // Fetch all users excluding the password
+      res.json(users);
+  } catch (error) {
+      console.error('Error fetching users:', error);
+      res.status(500).send('Internal server error');
+  }
+});
+
+
+app.post('/api/toggle-approval/:userId', async (req, res) => {
+  const { userId } = req.params;
+  const { isApproved } = req.body; // New approval status sent from the client
+  // Authentication and authorization checks should be here
+
+  try {
+      const user = await DbUser.findById(userId);
       if (!user) {
-        return res.status(401).send('User not found');
+          return res.status(404).send('User not found');
       }
-  
-      if (await user.validatePassword(password)) {
-        // User authenticated, generate a token
-        const token = crypto.randomBytes(16).toString('hex');
-        // Include the user's role in the response
-        res.json({ token: token, role: user.role, message: 'Login successful' });
+      user.isApproved = isApproved;
+      await user.save();
+      res.send(`User approval status updated to: ${isApproved}`);
+  } catch (error) {
+      console.error('Error toggling user approval:', error);
+      res.status(500).send('Internal server error');
+  }
+});
+
+
+app.post('/api/toggleAdmin/:userId', async (req, res) => {
+  const { userId } = req.params;
+  const { newRole } = req.body;
+
+  try {
+      await DbUser.findByIdAndUpdate(userId, { role: newRole });
+      res.status(200).send('User role updated successfully');
+  } catch (error) {
+      res.status(500).send('Error updating user role');
+  }
+});
+
+
+
+
+
+app.delete('/api/delete-user/:userId', async (req, res) => {
+  const { userId } = req.params;
+  // Authentication and authorization checks should be here
+
+  try {
+      const result = await DbUser.findByIdAndDelete(userId);
+      if (result) {
+          res.send('User deleted successfully');
       } else {
-        res.status(401).send('Invalid credentials');
+          res.status(404).send('User not found');
       }
-    } catch (error) {
-      console.error('Login error:', error);
+  } catch (error) {
+      console.error('Error deleting user:', error);
       res.status(500).send('Internal server error');
+  }
+});
+
+
+
+app.post('/api/login', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const user = await DbUser.findOne({ username: username });
+    if (!user) {
+      return res.status(401).json({ message: 'User not found' });
     }
-  });
-  
 
-
-
-
-  app.post('/api/register', async (req, res) => {
-    const { username, password } = req.body;
-  
-    // Check if user already exists
-    const existingUser = await DbUser.findOne({ username: username });
-    if (existingUser) {
-      return res.status(409).send('User already exists');
+    if (!user.isApproved) {
+      return res.status(401).json({ message: 'Account not approved yet' });
     }
-  
-    try {
-      // Create a new user and save to the database
-      const newUser = new DbUser({ username, password });
-      await newUser.save();
-  
-      res.status(201).send('User registered successfully');
-    } catch (error) {
-      console.error('Registration error:', error);
-      res.status(500).send('Internal server error');
+
+    const isPasswordValid = await user.validatePassword(password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Wrong password' });
     }
-  });
+
+
+    const token = crypto.randomBytes(16).toString('hex');
+    // Include isApproved in the response
+    res.json({ token: token, role: user.role, isApproved: user.isApproved, message: 'Login successful' });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+
+
   
+
+
+
+
+app.post('/api/register', async (req, res) => {
+  const { username, password } = req.body;
+
+  const existingUser = await DbUser.findOne({ username: username });
+  if (existingUser) {
+    return res.status(409).send('User already exists');
+  }
+
+  try {
+    const newUser = new DbUser({ username, password, isApproved: false });
+    await newUser.save();
+
+    res.status(201).send('User registered, pending approval');
+  } catch (error) {
+    console.error('Registration error:', error);
+    res.status(500).send('Internal server error');
+  }
+});
+
 
 
 const PORT = process.env.PORT || 3001;

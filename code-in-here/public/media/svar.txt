@@ -1,0 +1,24 @@
+2a
+Personen med personnummeret 17027948489 er Stein I. Langballe
+
+2b
+Personen med personnummer 31029989532, Finn Sikkemann, er gift med personen som har personnummer 12060060606 som er Gajus Cæcar
+
+2c
+Bilen med registreringsnummer AP64771, en Toyota Prius, eies av Anna Dåsevatn, som bor på Varangergata 12.
+
+2d
+Anna Dåsevatn bor i Varangergata 12
+
+2e
+Det er ingen ekteskapsregistreringer for Anna Dåsevatn i ekteskapsregisteret; hun er ikke gift.
+
+
+3a
+Svar: Ekteskapet mellom personene med personnumrene '31029989532'(Finn Sikkemann) og '12060060606'(Gajus J. Cæcar) har blitt oppløst og fjernet fra ekteskapsregister.
+
+3b
+Anna Dåsevatn (personnummer '19040045851') og Gaius J. Cæcar (personnummer '12060060606') har blitt lagt til i ekteskapsregister med et nytt ekteskapsID.
+
+3c
+Eiendomsnummeret for Varangergata 12 i Sør-Varanger kommune har blitt korrigert til '12589' i eiendomsregister.

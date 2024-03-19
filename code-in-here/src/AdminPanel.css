@@ -1,0 +1,47 @@
+.admin-panel {
+    background-color: #2b1c3c; /* Consistent background color */
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Adapt number of columns based on screen size */
+    gap: 10px;
+  }
+  
+  .admin-user {
+    background-color: #483d8b; /* Match the FileManager's item background */
+    color: white;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .admin-user button {
+    background-color: red;
+    color: white;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: none;
+    margin-top: 10px;
+  }
+  
+/* Increase the specificity of the green and red button styles */
+.admin-user .button-green {
+    background-color: #28a745; /* Green color */
+  }
+  
+  .admin-user .button-green:hover {
+    background-color: #218838; /* Darker green on hover */
+  }
+  
+  .admin-user .button-red {
+    background-color: #dc3545; /* Red color */
+  }
+  
+  .admin-user .button-red:hover {
+    background-color: #c82333; /* Darker red on hover */
+  }
+  
+    
