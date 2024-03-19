@@ -20,7 +20,7 @@ function LoginPage() {
       });
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem('jwtToken', data.token);
+        localStorage.setItem('RandomToken', data.token);
         localStorage.setItem('userRole', data.role);
         localStorage.setItem('isApproved', data.isApproved.toString());
         if (data.isApproved) {

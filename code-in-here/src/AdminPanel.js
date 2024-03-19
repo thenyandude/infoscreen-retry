@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+import './AdminPanel.css'
+
 const AdminPanel = () => {
     const [users, setUsers] = useState([]);
 
@@ -20,11 +22,22 @@ const AdminPanel = () => {
             body: JSON.stringify({ isApproved: !currentApprovalStatus })
         })
         .then(response => {
+            console.log(`Response for approval toggle: ${response.status}`);
             if (response.ok) {
-                setUsers(users.map(user => user._id === userId ? { ...user, isApproved: !currentApprovalStatus } : user));
+                const currentUserId = localStorage.getItem('userId');
+                console.log(`Current user ID: ${currentUserId}, Updated user ID: ${userId}`);
+                if (currentUserId === userId.toString()) {
+                    localStorage.setItem('isApproved', !currentApprovalStatus);
+                    console.log('Local storage updated for approval.');
+                    alert('Your approval status has been updated. Please log in again.');
+                }
+            } else {
+                console.error('Failed to toggle approval.');
             }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error updating approval status:', error);
+        });
     };
 
 
@@ -39,16 +52,24 @@ const AdminPanel = () => {
             body: JSON.stringify({ newRole })
         })
         .then(response => {
+            console.log(`Response for admin toggle: ${response.status}`);
             if (response.ok) {
-                setUsers(users.map(user => {
-                    if (user._id === userId) {
-                        return { ...user, role: newRole };
-                    }
-                    return user;
-                }));
+                // ... update local state ...
+                const currentUserId = localStorage.getItem('userId');
+                console.log(`Current user ID: ${currentUserId}, Updated user ID: ${userId}`);
+                if (currentUserId === userId.toString()) {
+                    const newRole = currentRole === 'admin' ? 'user' : 'admin';
+                    localStorage.setItem('userRole', newRole);
+                    console.log('Local storage updated for admin role.');
+                    alert('Your role has been updated. Please log in again.');
+                }
+            } else {
+                console.error('Failed to toggle admin role.');
             }
         })
-        .catch(error => console.error('Error updating admin status:', error));
+        .catch(error => {
+            console.error('Error updating admin role:', error);
+        });
     };
 
     
@@ -64,32 +85,28 @@ const AdminPanel = () => {
             .catch(error => console.error('Error:', error));
     };
 
-    const getButtonLabel = (user) => {
-        if (user.role === 'admin') {
-            return 'Demote Admin';
-        } else {
-            return 'Toggle Admin';
-        }
-    };
     
     return (
-        <div>
-            {users.map(user => (
-                <div key={user._id}>
-                    {user.username} - Approved: {user.isApproved ? 'Yes' : 'No'} - Role: {user.role}
-                    <button onClick={() => toggleApproval(user._id, user.isApproved)}>
-                    {user.isApproved ? 'Unapprove' : 'Approve'}
-                </button>         
-
-                <button onClick={() => toggleAdmin(user._id, user.role)}>
+            <div className="admin-panel">
+                {users.map(user => (
+        <div key={user._id} className="admin-user">
+        <div>{user.username} - Approved: {user.isApproved ? 'Yes' : 'No'} - Role: {user.role}</div>
+            <button 
+                onClick={() => toggleApproval(user._id, user.isApproved)}
+                className={user.isApproved ? 'button-red' : 'button-green'}>
+                {user.isApproved ? 'Unapprove' : 'Approve'}
+            </button>
+            <button 
+                onClick={() => toggleAdmin(user._id, user.role)}
+                className={user.role === 'admin' ? 'button-red' : 'button-green'}>
                 {user.role === 'admin' ? 'Revoke Admin' : 'Make Admin'}
-                </button>
+            </button>
 
                     <button onClick={() => deleteUser(user._id)}>Delete User</button>
                 </div>
             ))}
         </div>
     );
-};
+};    
 
 export default AdminPanel;
