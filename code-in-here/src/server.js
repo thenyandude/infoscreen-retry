@@ -11,7 +11,7 @@ const mongoose = require('mongoose')
 const dburi = "mongodb+srv://nyan:AOAEUkm7gAqv0xEr@infoscreen-data.93a1fol.mongodb.net"
 
 const DbUser = require('./models/DbUser');
-const Media = require('./models/Media'); // Adjust the path to your Media model
+const Media = require('./models/Media');
 
 
 
@@ -22,7 +22,7 @@ mongoose.connect(dburi, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const db = mongoose.connection;
 
-const allowedOrigins = ['http://10.12.5.16', 'http://localhost:3000'];
+const allowedOrigins = ['http://10.12.5.16', 'http://10.12.5.16', 'http://localhost:3000'];
 
 app.use(cors({
   origin: function(origin, callback){
@@ -378,5 +378,5 @@ console.log('Existing user check complete:', existingUser);
 
 
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const PORT = process.env.PORT || 80;
+app.listen(PORT,'0,0,0,0', () => console.log(`Server running on port ${PORT}`));
