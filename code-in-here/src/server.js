@@ -47,11 +47,12 @@ db.once('open', function() {
 ffmpeg.setFfprobePath(ffprobePath);
 
 const storage = multer.diskStorage({
-  destination: '/var/www/html/media',
+  destination: path.join(__dirname, 'uploads'), // Use local directory for uploads
   filename: function (req, file, cb) {
     cb(null, file.originalname);
   },
 });
+
 
 const upload = multer({
   storage: storage,
