@@ -10,7 +10,9 @@ function LoginPage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    console.log('Form submitted with username:', username, 'and password:', password);
     try {
+      console.log('Sending login request to server...');
       const response = await fetch('http://10.12.5.16:3001/api/login', {
         method: 'POST',
         headers: {
@@ -18,7 +20,10 @@ function LoginPage() {
         },
         body: JSON.stringify({ username, password }),
       });
+      console.log('Response received:', response);
       const data = await response.json();
+      console.log('Response data:', data);
+  
       if (response.ok) {
         localStorage.setItem('RandomToken', data.token);
         localStorage.setItem('userRole', data.role);
