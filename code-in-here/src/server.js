@@ -22,7 +22,7 @@ mongoose.connect(dburi, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const db = mongoose.connection;
 
-const allowedOrigins = ['http://10.12.5.16', 'http://10.12.5.16', 'http://localhost:3000'];
+const allowedOrigins = ['http://10.12.5.16', 'http://10.12.5.17', 'http://localhost:3000'];
 
 app.use(cors({
   origin: function(origin, callback){

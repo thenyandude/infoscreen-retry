@@ -12,7 +12,7 @@ function RegisterPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch('http://localhost:3001/api/register', {
+      const response = await fetch('http://10.12.5.17/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
