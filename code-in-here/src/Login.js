@@ -13,7 +13,7 @@ function LoginPage() {
     console.log('Form submitted with username:', username, 'and password:', password);
     try {
       console.log('Sending login request to server...');
-      const response = await fetch('http://10.12.5.16:3001/api/login', {
+      const response = await fetch('http://localhost:3001/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

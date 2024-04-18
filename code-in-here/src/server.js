@@ -357,7 +357,10 @@ app.post('/api/login', async (req, res) => {
 app.post('/api/register', async (req, res) => {
   const { username, password } = req.body;
 
-  const existingUser = await DbUser.findOne({ username: username });
+  console.log('Checking for existing user');
+const existingUser = await DbUser.findOne({ username: username });
+console.log('Existing user check complete:', existingUser);
+
   if (existingUser) {
     return res.status(409).send('User already exists');
   }

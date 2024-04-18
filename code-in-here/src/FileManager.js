@@ -50,7 +50,7 @@ const FileManager = () => {
 
   const handleDurationChange = async (mediaId, newDuration) => {
     try {
-      const response = await fetch(`http://10.12.5.16:3001/updateDuration/${mediaId}`, {
+      const response = await fetch(`http://localhost:3001/updateDuration/${mediaId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

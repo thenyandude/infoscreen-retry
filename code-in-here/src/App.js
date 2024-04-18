@@ -30,7 +30,7 @@ const App = () => {
         </ProtectedRoute>}/>  // Admin panel route
 
         <Route path="/" element={<LoginPage/>} />
-        <Route path="/r" element={<RegisterPage/>} />
+        <Route path="/register" element={<RegisterPage/>} />
       </Routes>
     </Router>
   );
